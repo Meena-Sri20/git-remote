@@ -1,0 +1,28 @@
+sudo apt update
+sudo apt install docker.io git nano openjdk-17-jdk maven -y
+sudo systemctl start docker
+sudo systemctl enable docker
+sudo docker --version
+git --version
+java -version
+mvn -version
+
+cd ~
+git clone https://github.com/lunahex/maven_web.git
+cd ~/maven_web
+
+mvn clean package
+
+nano Dockerfile
+FROM tomcat:9.0-jdk17-temurin
+COPY target/*.war /usr/local/tomcat/webapps/ROOT.war
+EXPOSE 8080
+CMD ["catalina.sh", "run"]
+EOF
+
+sudo docker build -t webapp-aws .
+sudo docker images
+sudo docker rm -f webapp-aws-demo
+sudo docker run -d --name webapp-aws-demo -p 6060:8080 webapp-aws
+sudo docker ps
+sudo docker logs webapp-aws-demo
